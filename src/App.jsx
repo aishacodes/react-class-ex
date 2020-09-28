@@ -12,8 +12,19 @@ export const generateId = () => Math.random().toString(36).substring(2, 6)
     const [ newName, setNewName ] = useState('')
   
     const addName = (e) => {
-      console.log(e)
-      e.preventDefault()
+      e.preventDefault();
+
+      if(Object.keys(persons).some(personId => 
+        {
+          const person = persons[personId]
+         return person.name.toLowerCase() === newName.trim().toLowerCase()
+        } ))
+          {
+        setNewName('')
+        return window.alert(`${newName} is already added to phonebook` )
+
+      }
+
       const newInput = {}
       newInput[generateId()] = {
           name : newName
