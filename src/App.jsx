@@ -7,11 +7,12 @@ export const generateId = () => Math.random().toString(36).substring(2, 6)
 
   const App = () => {
     const [ persons, setPersons ] = useState([
-      { name: 'Arto Hellas' }
+      { name: 'Arto Hellas', phoneNumber: '08143694373'}
     ]) 
     const [ newName, setNewName ] = useState('')
+    const [ newNumber, setNewNumber ] = useState('')
   
-    const addName = (e) => {
+    const addNewContact = (e) => {
       e.preventDefault();
 
       if(Object.keys(persons).some(personId => 
@@ -22,12 +23,12 @@ export const generateId = () => Math.random().toString(36).substring(2, 6)
           {
         setNewName('')
         return window.alert(`${newName} is already added to phonebook` )
-
       }
 
       const newInput = {}
       newInput[generateId()] = {
-          name : newName
+          name : newName,
+          phoneNumber : newNumber
       }
       setPersons({
         ...persons,
@@ -42,10 +43,11 @@ export const generateId = () => Math.random().toString(36).substring(2, 6)
     return (
       <div>
         <h2>Phonebook</h2>
-        <form onSubmit={e => addName(e)}>
+        <form onSubmit={e => addNewContact(e)}>
           <div>
-            name: <input value={newName}  onChange={e => setNewName( e.target.value ) } />
-          </div>
+            name: <input value={newName}  onChange={e => setNewName( e.target.value ) } /> </div><br />
+            <div>number: <input value = {newNumber} onChange={e => setNewNumber(e.target.value) } /></div>
+         
           <div>
             <button type="submit">add</button>
           </div>
@@ -56,7 +58,7 @@ export const generateId = () => Math.random().toString(36).substring(2, 6)
               personId => {
                const person = persons[personId] 
 
-              return <p key={personId}>{person.name}</p>
+              return <p key={personId}><span>{person.name}</span>&nbsp;<span>{person.phoneNumber}</span></p>
               }
               )
           }
