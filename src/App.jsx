@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
-
+import Search from './components/Search'
+import Persons from './components/Persons'
+import PersonForm from './components/PersonForm'
 import './App.css';
 
 export const generateId = () => Math.random().toString(36).substring(2, 6)
@@ -7,11 +9,18 @@ export const generateId = () => Math.random().toString(36).substring(2, 6)
 
   const App = () => {
     const [ persons, setPersons ] = useState([
-      { name: 'Arto Hellas', phoneNumber: '08143694373'}
+      { name: 'Arto Hellas', phoneNumber: '040-123456' },
+      { name: 'Ada Lovelace', phoneNumber: '39-44-5323523' },
+      { name: 'Dan Abramov', phoneNumber: '12-43-234345' },
+      { name: 'Mary Poppendieck', phoneNumber: '39-23-6423122' }
     ]) 
     const [ newName, setNewName ] = useState('')
     const [ newNumber, setNewNumber ] = useState('')
-  
+    const [ filtered, setFiltered ] = useState('')
+
+
+
+
     const addNewContact = (e) => {
       e.preventDefault();
 
@@ -22,6 +31,7 @@ export const generateId = () => Math.random().toString(36).substring(2, 6)
         } ))
           {
         setNewName('')
+        setNewNumber('')
         return window.alert(`${newName} is already added to phonebook` )
       }
 
@@ -36,33 +46,31 @@ export const generateId = () => Math.random().toString(36).substring(2, 6)
         
       })
       setNewName('')
+      setNewNumber('')
     }
 
-
+    const search = (ev) => {
+      console.log(ev)
+      ev.preventDefault()
+      const query = ev.target.value
+      if(!query.trim()) setFiltered(()=> null)
+  
+      setFiltered(() => Object.keys(persons).filter( personId => {
+          const person = persons[personId]
+          console.log(query)
+      return person.name.toLowerCase().indexOf(query.toLowerCase().trim()) > -1
+  
+      }))
+  
+    }
 
     return (
       <div>
         <h2>Phonebook</h2>
-        <form onSubmit={e => addNewContact(e)}>
-          <div>
-            name: <input value={newName}  onChange={e => setNewName( e.target.value ) } /> </div><br />
-            <div>number: <input value = {newNumber} onChange={e => setNewNumber(e.target.value) } /></div>
-         
-          <div>
-            <button type="submit">add</button>
-          </div>
-        </form>
+        <Search handlesearch = {search}/>
+        <PersonForm nameval={newName} numval= {newNumber} handleSubmit = {e => addNewContact(e)} handleNumberChange={e => setNewNumber(e.target.value) } handleNameChange={e => setNewName( e.target.value ) } />
         <h2>Numbers</h2>
-        <p>{
-            Object.keys(persons).map(
-              personId => {
-               const person = persons[personId] 
-
-              return <p key={personId}><span>{person.name}</span>&nbsp;<span>{person.phoneNumber}</span></p>
-              }
-              )
-          }
-        </p>
+       <Persons persons = {filtered || persons} />
       </div>
     )
   }
