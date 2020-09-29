@@ -55,12 +55,26 @@ export const generateId = () => Math.random().toString(36).substring(2, 6)
       const query = ev.target.value
       if(!query.trim()) setFiltered(()=> null)
   
-      setFiltered(() => Object.keys(persons).filter( personId => {
-          const person = persons[personId]
-          console.log(query)
-      return person.name.toLowerCase().indexOf(query.toLowerCase().trim()) > -1
+      // setFiltered(() => Object.keys(persons).filter( personId => {
+      //     const person = persons[personId]
+      //     console.log(query)
+      // return person.name.toLowerCase().indexOf(query.toLowerCase().trim()) > -1
   
-      }))
+      // }))
+
+      const filtered = {}
+    Object.keys(persons).forEach(personId => {
+      const person = persons[personId]
+
+      if (person.name.trim().toLowerCase().indexOf(query.trim().toLowerCase()) > -1) 
+      filtered[personId] = person
+    })
+
+    if (Object.keys(filtered).length) {
+      setFiltered(filtered);
+    } else {
+      setFiltered(null);
+    }
   
     }
 
