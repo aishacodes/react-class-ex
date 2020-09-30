@@ -29,16 +29,26 @@ export const generateId = () => Math.random().toString(36).substring(2, 6)
          {
         setNewName('')
         setNewNumber('')
-        return window.alert(`${newName} is already added to phonebook` )
+        return window.alert(`${newName} has been added to phonebook before` )
       }
       const newInput = {
           id: generateId(),        
           name : newName,
           phoneNumber : newNumber
       }
-      setPersons(persons =>[...persons, newInput])
-      setNewName('')
-      setNewNumber('')
+      Axios.post('http://localhost:3030/persons',newInput)
+            .then( res => {
+              setNewName('')
+              setNewNumber('')
+              setPersons(persons.concat(res.data))
+              alert('Contact has been added successfully!')
+            })
+            .catch(err => alert(err))
+
+
+      // setPersons(persons =>[...persons, newInput])
+      // setNewName('')
+      // setNewNumber('')
     }
 
     const search = (ev) => {
