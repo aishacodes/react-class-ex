@@ -9,10 +9,10 @@ export const generateId = () => Math.random().toString(36).substring(2, 6)
 
   const App = () => {
     const [ persons, setPersons ] = useState([
-      { name: 'Arto Hellas', phoneNumber: '040-123456' },
-      { name: 'Ada Lovelace', phoneNumber: '39-44-5323523' },
-      { name: 'Dan Abramov', phoneNumber: '12-43-234345' },
-      { name: 'Mary Poppendieck', phoneNumber: '39-23-6423122' }
+      {id:1, name: 'Arto Hellas', phoneNumber: '040-123456' },
+      {id:2, name: 'Ada Lovelace', phoneNumber: '39-44-5323523' },
+      {id:3, name: 'Dan Abramov', phoneNumber: '12-43-234345' },
+      {id:4, name: 'Mary Poppendieck', phoneNumber: '39-23-6423122' }
     ]) 
     const [ newName, setNewName ] = useState('')
     const [ newNumber, setNewNumber ] = useState('')
@@ -24,27 +24,18 @@ export const generateId = () => Math.random().toString(36).substring(2, 6)
     const addNewContact = (e) => {
       e.preventDefault();
 
-      if(Object.keys(persons).some(personId => 
-        {
-          const person = persons[personId]
-         return person.name.toLowerCase() === newName.trim().toLowerCase()
-        } ))
-          {
+      if(persons.some(person => person.name.toLowerCase() === newName.trim().toLowerCase()))
+         {
         setNewName('')
         setNewNumber('')
         return window.alert(`${newName} is already added to phonebook` )
       }
-
-      const newInput = {}
-      newInput[generateId()] = {
+      const newInput = {
+          id: generateId(),        
           name : newName,
           phoneNumber : newNumber
       }
-      setPersons({
-        ...persons,
-        ...newInput
-        
-      })
+      setPersons(persons =>[...persons, newInput])
       setNewName('')
       setNewNumber('')
     }
@@ -54,27 +45,11 @@ export const generateId = () => Math.random().toString(36).substring(2, 6)
       ev.preventDefault()
       const query = ev.target.value
       if(!query.trim()) setFiltered(()=> null)
-  
-      // setFiltered(() => Object.keys(persons).filter( personId => {
-      //     const person = persons[personId]
-      //     console.log(query)
-      // return person.name.toLowerCase().indexOf(query.toLowerCase().trim()) > -1
-  
-      // }))
-
-      const filtered = {}
-    Object.keys(persons).forEach(personId => {
-      const person = persons[personId]
-
-      if (person.name.trim().toLowerCase().indexOf(query.trim().toLowerCase()) > -1) 
-      filtered[personId] = person
-    })
-
-    if (Object.keys(filtered).length) {
-      setFiltered(filtered);
-    } else {
-      setFiltered(null);
-    }
+      setFiltered(
+        persons.filter(person => {
+         return person.name.toLowerCase().trim().indexOf(query.trim().toLowerCase()) >-1
+        })
+      )
   
     }
 
