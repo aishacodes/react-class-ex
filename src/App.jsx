@@ -25,7 +25,7 @@ export const generateId = () => Math.random().toString(36).substring(2, 6)
     const addNewContact = (e) => {
       e.preventDefault();
 
-      if(persons.some(person => person.name.toLowerCase() === newName.trim().toLowerCase()))
+      if(persons.some(person => person.name.toLowerCase().trim() === newName.trim().toLowerCase()))
          {
         setNewName('')
         setNewNumber('')
