@@ -14,22 +14,23 @@ export const generateId = () => Math.random().toString(36).substring(2, 6)
       // {id:2, name: 'Ada Lovelace', phoneNumber: '39-44-5323523' },
       // {id:3, name: 'Dan Abramov', phoneNumber: '12-43-234345' },
       // {id:4, name: 'Mary Poppendieck', phoneNumber: '39-23-6423122' }
-    ]) 
-    const [ newName, setNewName ] = useState('')
-    const [ newNumber, setNewNumber ] = useState('')
+    ])
     const [ filtered, setFiltered ] = useState('')
-
+    
 
 
 
     const addNewContact = (e) => {
       e.preventDefault();
-
+      let newName = e.target.name.value
+      let  newNumber = e.target.phoneNumber.value
+          console.log(newName)
       if(persons.some(person => person.name.toLowerCase().trim() === newName.trim().toLowerCase()))
          {
-        setNewName('')
-        setNewNumber('')
-        return window.alert(`${newName} has been added to phonebook before` )
+          window.alert(`${newName} has been added to phonebook before`)
+          e.target.reset()
+          return null
+                   
       }
       const newInput = {
           id: generateId(),        
@@ -38,8 +39,8 @@ export const generateId = () => Math.random().toString(36).substring(2, 6)
       }
       Axios.post('http://localhost:3030/persons',newInput)
             .then( res => {
-              setNewName('')
-              setNewNumber('')
+              newName =''
+              newNumber=''
               setPersons(persons.concat(res.data))
               alert('Contact has been added successfully!')
             })
@@ -78,7 +79,7 @@ export const generateId = () => Math.random().toString(36).substring(2, 6)
       <div>
         <h2>Phonebook</h2>
         <Search handlesearch = {search}/>
-        <PersonForm nameval={newName} numval= {newNumber} handleSubmit = {e => addNewContact(e)} handleNumberChange={e => setNewNumber(e.target.value) } handleNameChange={e => setNewName( e.target.value ) } />
+        <PersonForm handleSubmit = {e => addNewContact(e)} />
         <h2>Numbers</h2>
        <Persons persons = {filtered || persons} />
       </div>
