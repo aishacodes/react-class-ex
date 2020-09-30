@@ -1,18 +1,19 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Search from './components/Search'
 import Persons from './components/Persons'
 import PersonForm from './components/PersonForm'
 import './App.css';
+import Axios from 'axios';
 
 export const generateId = () => Math.random().toString(36).substring(2, 6)
 
 
   const App = () => {
     const [ persons, setPersons ] = useState([
-      {id:1, name: 'Arto Hellas', phoneNumber: '040-123456' },
-      {id:2, name: 'Ada Lovelace', phoneNumber: '39-44-5323523' },
-      {id:3, name: 'Dan Abramov', phoneNumber: '12-43-234345' },
-      {id:4, name: 'Mary Poppendieck', phoneNumber: '39-23-6423122' }
+      // {id:1, name: 'Arto Hellas', phoneNumber: '040-123456' },
+      // {id:2, name: 'Ada Lovelace', phoneNumber: '39-44-5323523' },
+      // {id:3, name: 'Dan Abramov', phoneNumber: '12-43-234345' },
+      // {id:4, name: 'Mary Poppendieck', phoneNumber: '39-23-6423122' }
     ]) 
     const [ newName, setNewName ] = useState('')
     const [ newNumber, setNewNumber ] = useState('')
@@ -52,6 +53,17 @@ export const generateId = () => Math.random().toString(36).substring(2, 6)
       )
   
     }
+
+    useEffect(() => {
+      
+      Axios.get('http://localhost:3030/persons')
+            .then(res=>{
+              setPersons(res.data)
+            })
+            .catch(err => alert(err))
+
+    }, [])
+
 
     return (
       <div>
