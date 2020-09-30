@@ -55,7 +55,6 @@ export const generateId = () => Math.random().toString(36).substring(2, 6)
     }
 
     useEffect(() => {
-      
       Axios.get('http://localhost:3030/persons')
             .then(res=>{
               setPersons(res.data)
