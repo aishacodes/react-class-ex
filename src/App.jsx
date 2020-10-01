@@ -3,21 +3,29 @@ import Axios from 'axios'
 
 import './App.css';
 
-const SingleCountry = ({info}) => {
+const SingleCountry = ({info, showByDefault}) => {
   const { name, languages, flag, population, capital } = info
+  const [showInfo, setShowInfo] = useState(false)
 
-  return (<div>
-    <h2>{name}</h2>
-    <p>Capital: {capital}</p>
-    <p>Population: {population}</p>
-    <ul>
-      {
-        languages.map((lang, langIndex) => <li key={`${name}-lang-${langIndex}`}>{lang.name}</li>)
-      }
-    </ul>
-    <img src={flag} style={{ width: '7rem' }} alt="country" />
-  </div>)
-}
+  return (<div style={{marginBottom:'0.7rem'}}>
+    <span>{name} </span>
+    {
+      showByDefault || showInfo
+      ?
+      (<>
+        <p>Capital: {capital}</p>
+        <p>Population: {population}</p>
+        <ul>
+          {
+            languages.map((lang, langIndex) => <li key={`${name}-lang-${langIndex}`}>{lang.name}</li>)
+          }
+        </ul>
+        <img src={flag} style={{ width: '7rem' }} alt="country" />
+        </>)
+      : !showByDefault && !showInfo? <button onClick={()=> setShowInfo(true)}>Show</button> : ''
+    }
+    </div>)
+  }
 
 function App() {
   const [countries, setCountries] = useState([])
@@ -39,16 +47,17 @@ function App() {
   ? countries.filter(country => country.name.toLowerCase().indexOf(query.toLowerCase().trim()) >-1)
   : []
 
+  console.log(matches)
   return (
    <div>
-     Find countries <input value={query} onChange={e => setQuery(e.target.value)} />
+     Find countries <input value={query} style={{margin:'0.5rem'}} onChange={e => setQuery(e.target.value)} />
 
      {
-       matches.length === 1
-       ? <SingleCountry info={matches[0]} />
-       : matches.length > 10
-          ? <p>Too many matches, specity more filters</p>
-          : matches.map((country, countryIndex) => <div key={`country-${countryIndex}`}> {country.name}</div>)
+      matches.length === 1
+      ? <SingleCountry info={matches[0]}  showByDefault={true}/>
+      : matches.length > 10
+         ? <p>Too many matches, specity more filters</p>
+         : matches.map((country, countryIndex) => <SingleCountry info={country} />)
      }
 
      </div>
